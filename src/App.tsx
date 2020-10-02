@@ -1,8 +1,9 @@
 import React from 'react';
-import { hot } from 'react-hot-loader/root';
+
 import './App.css';
 
 const App = () => {
+  console.log(process.env.ENV_TEST_VAR);
   return (
     <div className="App">
       <h1>App</h1>
@@ -10,4 +11,4 @@ const App = () => {
   );
 };
 
-export default hot(App);
+export default App;

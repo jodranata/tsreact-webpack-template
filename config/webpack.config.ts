@@ -76,9 +76,6 @@ const webpackConf: webpack.ConfigurationFactory = (
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.json'],
-      alias: {
-        'react-dom': '@hot-loader/react-dom',
-      },
     },
     devServer: {
       inline: true,
@@ -121,7 +118,6 @@ const webpackConf: webpack.ConfigurationFactory = (
                         regenerator: true,
                       },
                     ],
-                    'react-hot-loader/babel',
                   ],
                   sourceType: 'unambiguous',
                   babelrc: false,
