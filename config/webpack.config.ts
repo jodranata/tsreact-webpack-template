@@ -16,7 +16,10 @@ const webpackConf: webpack.ConfigurationFactory = (
   const isProduction = args.mode === 'production';
   const isDevelopment = args.mode === 'development';
 
-  const getLoaders = (cssOption?: webpack.RuleSetQuery): webpack.RuleSetUse => {
+  const getLoaders = (
+    cssOption?: webpack.RuleSetQuery,
+    preProcessor?: string,
+  ): webpack.RuleSetUse => {
     const loaders = [
       isDevelopment && require.resolve('style-loader'),
       isProduction && {
@@ -26,9 +29,33 @@ const webpackConf: webpack.ConfigurationFactory = (
         loader: require.resolve('css-loader'),
         options: cssOption,
       },
-      { loader: require.resolve('sass-loader') },
-    ].filter(Boolean) as webpack.RuleSetUse;
-    return loaders;
+      {
+        loader: require.resolve('postcss-loader'),
+        options: {
+          postcssOptions: {
+            plugins: [
+              'postcss-flexbugs-fixes',
+              'postcss-preset-env',
+              'autoprefixer',
+            ],
+          },
+        },
+      },
+    ].filter(Boolean);
+    if (preProcessor) {
+      loaders.push(
+        {
+          loader: require.resolve('resolve-url-loader'),
+        },
+        {
+          loader: require.resolve(preProcessor),
+          options: {
+            sourceMap: true,
+          },
+        },
+      );
+    }
+    return loaders as webpack.RuleSetUse;
   };
 
   const getPlugin = (): webpack.Plugin[] => {
@@ -128,16 +155,14 @@ const webpackConf: webpack.ConfigurationFactory = (
             },
             {
               test: /\.css$/,
-              exclude: /node_modules/,
               use: getLoaders({ importLoaders: 1 }),
             },
             {
               test: /\.(scss|sass)$/,
-              exclude: /node_modules/,
-              use: getLoaders(),
+              use: getLoaders({ importLoaders: 3 }, 'sass-loader'),
             },
             {
-              loader: require.resolve('file-loader'),
+              loader: 'file-loader',
               exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
               options: {
                 name: 'static/media/[name].[hash:8].[ext]',
