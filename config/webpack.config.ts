@@ -158,8 +158,33 @@ const webpackConf: webpack.ConfigurationFactory = (
               use: getLoaders({ importLoaders: 1 }),
             },
             {
+              test: /\.module\.css$/,
+              use: getLoaders({
+                importLoaders: 1,
+                modules: {
+                  localIdentName: isDevelopment
+                    ? '[local]'
+                    : '[name]__[local]__[hash:base64:5]',
+                },
+              }),
+            },
+            {
               test: /\.(scss|sass)$/,
               use: getLoaders({ importLoaders: 3 }, 'sass-loader'),
+            },
+            {
+              test: /\.module\.(scss|sass)$/,
+              use: getLoaders(
+                {
+                  importLoaders: 3,
+                  modules: {
+                    localIdentName: isDevelopment
+                      ? '[local]'
+                      : '[name]__[local]__[hash:base64:5]',
+                  },
+                },
+                'sass-loader',
+              ),
             },
             {
               loader: 'file-loader',
