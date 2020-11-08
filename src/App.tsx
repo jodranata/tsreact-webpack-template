@@ -1,13 +1,13 @@
 import React from 'react';
-
-import './App.css';
+import Header from './components/Header';
+import Section from './components/Section';
+import './css/App.css';
 
 const App = () => {
   return (
-    <div className="App">
-      <header>
-        <h1>Template for Typescript - React App</h1>
-      </header>
+    <div>
+      <Header title="Template for Typescript-React Apps" />
+      <Section />
     </div>
   );
 };
